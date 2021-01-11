@@ -1,0 +1,27 @@
+body {
+    background-color: '#eeecec';
+}
+
+div {
+    padding: 10px 10px 10px 0px;
+}
+
+.btn {
+    background-color: DodgerBlue;
+  }
+
+.progress {
+    padding: 0px 0px 0px 0px;
+} 
+
+.area{
+    background-color: '#eeecec';
+    padding: 10px 10px 10px 0px;
+}
+
+.card{
+    background-color: DodgerBlue;
+    border-radius: '10px';
+}
+
+
