@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { addDays } from "date-fns";
 import { Pie } from "react-chartjs-2";
-import CustomDatePicker from "./datepicker";
 import { queryReport } from "./queryReport";
 import { ChartTitle, Subtitle, PieChartWrapper, colors } from "./styles";
-import styles from './Basic/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
 import ReactTooltip from 'react-tooltip';
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const Gender = (props) => {
   const INITIAL_STATE = {

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import DashBoard from './Dashboard/dashboard.js';
 
-
 const CLIENT_ID = '';
 var called = false;
 

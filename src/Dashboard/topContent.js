@@ -13,7 +13,7 @@ import styles from './Basic/index.css';
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const Age = (props) => {
+const TopContentReport = (props) => {
   const INITIAL_STATE = {
     labels: [],
     sets: {
@@ -32,17 +32,18 @@ const Age = (props) => {
   const [reportData, setReportData] = useState(INITIAL_STATE);
 
   const displayResults = useCallback((response) => {
-    var ageObj = {};
+    var contentObj = {};
     const queryResult = response.result.reports[0].data.rows;
+    console.log(queryResult)
 
-    for (let i = 0; i < queryResult.length; i++) {
-      queryResult[i].dimensions[0] in ageObj ? ageObj[queryResult[i].dimensions[0]] += parseInt(queryResult[i].metrics[0].values[0]) : ageObj[queryResult[i].dimensions[0]] = parseInt(queryResult[i].metrics[0].values[0])
+    for (let i = 0; i < 10; i++) {
+      queryResult[i].dimensions[0] in contentObj ? contentObj[queryResult[i].dimensions[0]] += parseInt(queryResult[i].metrics[0].values[0]) : contentObj[queryResult[i].dimensions[0]] = parseInt(queryResult[i].metrics[0].values[0])
     }
 
     wait(3 * 1000).then(() => {
 
       var myData = {
-        labels: Object.keys(ageObj),
+        labels: Object.keys(contentObj),
         datasets: [{
           backgroundColor: 'rgba(146,202,242,0.2)',
           borderColor: 'rgba(38,150,228,1)',
@@ -50,13 +51,13 @@ const Age = (props) => {
           hoverBackgroundColor: 'rgba(146,202,242,0.4)',
           hoverBorderColor: 'rgba(38,150,228,1)',
           borderCapStyle: 'round',
-          data: Object.values(ageObj)
+          data: Object.values(contentObj)
         }]
       }
 
       setReportData({
         ...reportData,
-        labels: Object.keys(ageObj),
+        labels: Object.keys(contentObj),
         sets: myData
       })
     })
@@ -67,8 +68,12 @@ const Age = (props) => {
       viewID: props.viewID,
       startDate: props.startDate,
       endDate: props.endDate,
-      metrics: "ga:users",
-      dimensions: ["ga:userAgeBracket"],
+      metrics: "ga:pageviews",
+      dimensions: ["ga:pagePath"],
+      orderBy: {
+        fieldName: "ga:pageviews",
+        order: "DESCENDING",
+      },
     };
     setTimeout(
       () =>
@@ -83,10 +88,9 @@ const Age = (props) => {
     <div className="card" className={styles.card}>
       <div className="card-body">
         <ReportWrapper>
-          <ChartTitle>Age Group</ChartTitle>
+          <ChartTitle>Top Contents</ChartTitle>
           {reportData && (
             <ChartWrapper>
-              {/* <Bar data={data} width={100} height={250} options={options} /> */}
               <Bar
                 data={reportData.sets}
                 width={50}
@@ -135,4 +139,4 @@ const Age = (props) => {
   );
 };
 
-export default Age;
+export default TopContentReport;

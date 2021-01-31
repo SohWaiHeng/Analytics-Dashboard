@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import {
     Row, Col,
     Card,
-    CardBody,
-    Tooltip as TooltipStrap
+    CardBody
 } from 'reactstrap';
 
 import { Bar, Pie } from 'react-chartjs-2';
@@ -189,8 +188,9 @@ export default class IgDashboard extends Component {
     }
 
     componentDidMount() {
-        wait(2 * 1000).then(() => { getIGData() });
+        getIGData();
 
+        // to get data for number of followers and media count
         const updateOuterData = (response) => {
             this.setState(prevState => {
                 let followersCount = Object.assign({}, prevState.followersCount);
@@ -211,14 +211,11 @@ export default class IgDashboard extends Component {
 
         function getIGData() {
 
-            let accesstoken = 'EAAPWNENHrcUBAABzZCui4hFzNM9ZBdZBYh9EeTPMoNxOMDLEdMx5qRfM3n194zv68NXhplEftvv5EvhRRZAz18DWp2w435ykfNWgCjw1HQZBiof3O9IHZCeICXdJ2v6SI5EV5IP9NTWJ1WBF2TfdlmrpwrJ786eqOw2bko6QZAZC53qMtHH7qs8x86ZC568idviae6AcXG5N0IAZDZD'
+            let accesstoken = 'EAAPWNENHrcUBAGhWddJQiTk4p2pLD4VCvXS5TFLodT0FldefNR7Bmy9qSmWLJgOzFJYl6RsOCMztr8Dc4LZCDXC3swEYKYvyWZAnhJeUe7XBj4ycYMm7cNaP4yZBHXW7BXb45YgnzcDX41Q3EPldDIyf0awJlI4cEXnBWD5LZBvdWK77jbKg0xLbZB9vSangZD'
             const now = Math.round(Date.now() / 1000);
             const before = Math.round(now - 2500000);
             now.toString();
             before.toString();
-            console.log(now)
-            console.log(before)
-
 
             const updateData = (response) => {
                 updateOuterData(response)
@@ -249,29 +246,22 @@ export default class IgDashboard extends Component {
                 })
             }
 
+            // to get data for reach, impressions, lead generated and new followers
             function updateOuterData2(res, callback) {
                 class Metrics {
                     updateSimpleData(data, name) {
-                        var count = 28, sum = 0;
-                        console.log(data)
+                        var count = 27, sum = 0;
                         allData.forEach((obj) => {
                             if (data.period == 'day' && count > 0) {
-                                if (count == 21) {
+                                if (count == 20) {
                                     total7Days[name] = sum || 0;
-                                } else if (count == 14) {
-                                    previous7Days[name] = sum - total7Days[name] || 0}
-                                // } else if (count == 61) {
-                                //     total28Days[name] = sum || 0;
-                                // } else if (count == 33) {
-                                //     previous28Days[name] = sum - total28Days[name] || 0
-                                // } else if (count == 0) {
-                                //     total90Days[name] = sum || 0;
-                                // }
-                                console.log(data.values[count])
+                                } else if (count == 13) {
+                                    previous7Days[name] = sum - total7Days[name] || 0
+                                }
                                 obj[name] = 0 || data.values[count].value;
                                 sum += data.values[count].value || 0;
                                 count--;
-                                
+
                             }
                         });
                     }
@@ -282,14 +272,11 @@ export default class IgDashboard extends Component {
                 leadGenerated = new Metrics('profile_views', 7);
                 newFollowers = new Metrics('follower_count', 7);
 
-                console.log(res)
-
                 for (let i = 0; i < res.data.length; i++) {
 
                     switch (res.data[i].name) {
                         case 'reach':
                             reach.updateSimpleData(res.data[i], 'Reach');
-                            console.log(total7Days)
                             break;
 
                         case 'impressions':
@@ -309,10 +296,10 @@ export default class IgDashboard extends Component {
                 callback(allData);
             }
 
+            // to get data for demographic and country data 
             function updateOuterData3(res, callback) {
                 class Metrics {
                     changeAgeAndGender(data) {
-                        console.log(data)
                         const substitute = { '13-17': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65+': 6 }
                         Object.entries(data.values[data.values.length - 1].value).forEach(([key, value]) => {
                             if (key.substring(0, 1) == 'U' && key.substring(2) == '13-17') return;
@@ -321,7 +308,6 @@ export default class IgDashboard extends Component {
                     }
 
                     changeCountryData(data) {
-                        console.log(data)
                         Object.entries(data.values[data.values.length - 1].value).forEach(([key, value]) => {
                             key in countryArr ? countryNum[countryArr[key]] = value : countryNum['Others'] += value;
                         })
@@ -359,32 +345,24 @@ export default class IgDashboard extends Component {
                     }
                 }
 
-                console.log(genderAndAgeToFrequency)
-                console.log(fansCountry)
-
                 callback(allData);
             }
 
+            // to get data for online followers
             function updateOuterData4(res, callback) {
 
                 class Metrics {
 
                     saveLivetimeValue(data, name) {
-                        console.log(data)
                         var count = data.values.length - 1;
                         for (let i = count; i >= 0; i--) {
-                            console.log(count)
-                            if (data.values[i].value[0] != null) console.log(data.values[i].value[0])
                             if (data.values[i].value[0] != null && data.values[i].value[0] != 0) {
                                 Object.entries(data.values[i].value).forEach(((key, value) => {
-                                    console.log(key + ' - ' + value)
                                     onlineFollowersNum[compareOnline[value]] = data.values[i].value[value]
                                 }))
-                                console.log(onlineFollowersNum)
                                 break;
                             }
                         }
-                        console.log(onlineFollowersNum)
                     }
                 }
                 onlineFollowersMetrics = new Metrics('online_followers');
@@ -460,15 +438,85 @@ export default class IgDashboard extends Component {
 
         }
 
-        wait(6 * 1000).then(() => {
+        // wait until all the data are extracted from the IG API then update them into objects or arrays in an organized way to be displayed
+        wait(8 * 1000).then(() => {
             var metric;
             for (metric of metricsArray) {
-                console.log(metric)
                 todaysValue[metric] = parseFloat(maindata[Object.keys(maindata)[0]][metric])
                 difference[metric]['7'] = ((total7Days[metric] - previous7Days[metric]) / previous7Days[metric]) * 100 || 0
                 difference[metric]['28'] = ((total28Days[metric] - previous28Days[metric]) / previous28Days[metric]) * 100 || 0
             }
-            console.log(difference)
+            var demographic = {
+                labels: ['13-17', '18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+                datasets: [
+                    {
+                        label: 'Male',
+                        backgroundColor: 'rgba(146,202,242,0.2)',
+                        borderColor: 'rgba(38,150,228,1)',
+                        borderWidth: 1,
+                        hoverBackgroundColor: 'rgba(146,202,242,0.4)',
+                        hoverBorderColor: 'rgba(38,150,228,1)',
+                        borderCapStyle: 'round',
+                        data: genderAge90['M']
+                    },
+                    {
+                        label: 'Female',
+                        backgroundColor: 'rgba(255,87,121,0.2)',
+                        borderColor: 'rgba(255,87,122,1)',
+                        borderWidth: 1,
+                        stack: 1,
+                        hoverBackgroundColor: 'rgba(255,171,188,1)',
+                        hoverBorderColor: 'rgba(255,87,122,1)',
+                        data: genderAge90['F']
+                    },
+                    {
+                        label: 'Unknown',
+                        backgroundColor: 'rgba(15,21,150,0.2)',
+                        borderColor: 'rgba(25,99,232,1)',
+                        borderWidth: 1,
+                        stack: 2,
+                        hoverBackgroundColor: 'rgba(25,99,232,1)',
+                        hoverBorderColor: 'rgba(7,9,232,1)',
+                        data: genderAge90['U']
+                    }
+                ]
+            }
+            var thecountry = {
+                labels: countryDataNames,
+                datasets: [
+                    {
+                        data: countryDataArr,
+                        backgroundColor: [
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e'
+                        ],
+                        hoverBackgroundColor: [
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e',
+                            '#8dace7',
+                            '#71deb9',
+                            '#ef869e'
+                        ]
+                    }
+                ]
+            }
             var newOnlineFollowers = {
                 labels: ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'],
                 datasets: [
@@ -485,13 +533,12 @@ export default class IgDashboard extends Component {
                 ]
             }
             this.setState({
-                data: maindata, todaysValue: todaysValue, difference: difference, onlineFollowers: newOnlineFollowers
+                data: maindata, todaysValue: todaysValue, difference: difference, demographic: demographic, thecountry: thecountry, onlineFollowers: newOnlineFollowers
             })
-            console.log(total7Days)
-            console.log(maindata)
         })
     }
 
+// IG dashboard
     render() {
         return (
             <div style={{ padding: "10px 0px 10px 30px" }}>
@@ -501,6 +548,7 @@ export default class IgDashboard extends Component {
                         <h1 style={{ textAlign: "left", marginLeft: "15px" }}><b>Instagram Insights</b></h1>
                     </Col>
                 </Row>
+{/* Instagram Community Overview */}
                 <Row>
                     <Col lg="4">
                         <br></br>
@@ -519,9 +567,10 @@ export default class IgDashboard extends Component {
                         </CardBody></Card>
                     </Col>
                 </Row>
+{/* Instagram Community Demographic */}
                 <div style={{ padding: "10px 0px 10px 30px" }}>
                     <Row>
-                        <Col md="4">
+                        <Col md="6">
                             <h3 style={{ textAlign: "left" }}>Instagram Community Demographic</h3>
                         </Col>
                     </Row>
@@ -579,6 +628,7 @@ export default class IgDashboard extends Component {
                         <Col lg="1"></Col>
                     </Row>
                 </div>
+{/* Engagement */}
                 <div style={{ padding: "10px 0px 10px 30px" }}>
                     <Row>
                         <Col md="4">
@@ -597,18 +647,9 @@ export default class IgDashboard extends Component {
                                                 <div className="widget-chart-content">
                                                     <div style={{ float: 'right' }}>
                                                         <div>
-                                                            {/* <FontAwesomeIcon icon={faInfoCircle} id="TooltipExample"></FontAwesomeIcon>
-                                                            <Tooltip placement="right" target="TooltipExample">
-                                                                {engagementDescriptions[index]}
-                                                            </Tooltip> */}
                                                             <a data-for='enrich' data-tip={engagementDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
                                                             <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
                                                         </div>
-                                                        {/* <Hoverable>
-                                                                {(hovered) => {if (hovered) return <Box bgcolor="warning.main" color="warning.contrastText" p={2}>{pageEngagementDescriptions[index]}</Box> }}
-                                                        </Hoverable> */}
-                                                        {/* <a data-for='enrich' data-tip={engagementDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
-                                                        <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} /> */}
                                                     </div>
                                                     <div className="widget-subheading" >
                                                         <center><h2><b>{metricsArray[index]}</b></h2></center>
@@ -635,10 +676,8 @@ export default class IgDashboard extends Component {
                                                                     </linearGradient>
                                                                 </defs>
                                                                 <Tooltip />
-                                                                {/* <div style={{padding: "10px 10px 10px 0px"}}> */}
                                                                 <Area type='monotoneX' dataKey={value} stroke={lineChartColour} strokeWidth={2} fillOpacity={1}
                                                                     fill="url(#colorPv2)" style={{ padding: "10px 50px 10px 0px" }} />
-                                                                {/* </div> */}
                                                             </AreaChart>
                                                         </ResponsiveContainer>
                                                     </div></div></div></div></div></span>
@@ -646,6 +685,7 @@ export default class IgDashboard extends Component {
                         )
                     })}
                 </Row>
+{/* Growth and Details */}
                 <div style={{ padding: "10px 0px 10px 30px" }}>
                     <Row>
                         <Col md="4">
@@ -663,9 +703,6 @@ export default class IgDashboard extends Component {
                                             <div className="card mb-2 widget-chart" style={{ borderRadius: '10px' }}>
                                                 <div className="widget-chart-content">
                                                     <div style={{ float: 'right' }}>
-                                                        {/* <Hoverable>
-                                                                {(hovered) => {if (hovered) return <Box bgcolor="warning.main" color="warning.contrastText" p={2}>{pageEngagementDescriptions[index]}</Box> }}
-                                                        </Hoverable> */}
                                                         <a data-for='enrich' data-tip={engagementDescriptions[index + 3]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
                                                         <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
                                                     </div>
@@ -694,10 +731,9 @@ export default class IgDashboard extends Component {
                                                                     </linearGradient>
                                                                 </defs>
                                                                 <Tooltip />
-                                                                {/* <div style={{padding: "10px 10px 10px 0px"}}> */}
                                                                 <Area type='monotoneX' dataKey={value} stroke={lineChartColour} strokeWidth={2} fillOpacity={1}
+
                                                                     fill="url(#colorPv2)" style={{ padding: "10px 50px 10px 0px" }} />
-                                                                {/* </div> */}
                                                             </AreaChart>
                                                         </ResponsiveContainer>
                                                     </div></div></div></div></div></span>
@@ -709,7 +745,7 @@ export default class IgDashboard extends Component {
                             <CardBody>
                                 <div style={{ float: 'right' }}>
                                     <a data-for='enrich' data-tip={engagementDescriptions[4]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
-                                    <ReactTooltip id='enrich' border={'true'} textColor={'black'} backgroundColor={'white'} borderColor={'black'} getContent={(dataTip) => dataTip} />
+                                    <ReactTooltip id='enrich' border={'true'} getContent={(dataTip) => dataTip} />
                                 </div>
                                 <h2><b>Online Followers</b></h2>
                                 <div>
@@ -738,7 +774,6 @@ export default class IgDashboard extends Component {
                         </Card>
                     </Col>
                 </Row>
-
             </div>
         )
     }

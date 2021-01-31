@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Pie } from "react-chartjs-2";
 import { PieChartWrapper, colors } from "./styles";
-import { addDays } from "date-fns";
-import CustomDatePicker from "./datepicker";
 import { queryReport } from "./queryReport";
-import { ChartTitle, ReportWrapper, Subtitle, DatepickerRow } from "./styles";
+import { ChartTitle, ReportWrapper } from "./styles";
 import "chartjs-plugin-datalabels";
 import styles from './Basic/index.css';
 
@@ -26,7 +24,7 @@ const CountriesReport = (props) => {
     let values = [];
     let bgColors = [];
     queryResult.forEach((row, idx) => {
-      if (idx < 8) {
+      if (idx < 5) {
         labels.push(row.dimensions[0]);
         values.push(row.metrics[0].values[0]);
         bgColors.push(colors[idx + 1]);
@@ -98,21 +96,8 @@ const CountriesReport = (props) => {
       <div className="card-body">
         <ReportWrapper>
           <ChartTitle>Top 5 Countries</ChartTitle>
-          {/* <DatepickerRow>
-            <CustomDatePicker
-              placeholder={"Start date"}
-              date={startDate}
-              handleDateChange={(date) => setStartDate(date)}
-            />
-            <CustomDatePicker
-              placeholder={"End date"}
-              date={endDate}
-              handleDateChange={(date) => setEndDate(date)}
-            />
-          </DatepickerRow> */}
           {reportData && (
             <PieChartWrapper>
-              {console.log(data)}
               <Pie data={data} options={options} />
             </PieChartWrapper>
           )}

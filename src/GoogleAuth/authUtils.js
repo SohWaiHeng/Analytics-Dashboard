@@ -1,6 +1,6 @@
-import { isGoogleSignedIn } from '../App';
 
 const initAuth = () => {
+
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
   return window.gapi.auth2.init({
     client_id: CLIENT_ID,

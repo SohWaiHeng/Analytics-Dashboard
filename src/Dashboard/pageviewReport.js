@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { addDays, format } from "date-fns";
-import CustomDatePicker from "./datepicker";
+import { format } from "date-fns";
 import { queryReport } from "./queryReport";
 import { formatDate, transformToDate } from "./utils";
 import {
   ChartTitle,
   ReportWrapper,
   Subtitle,
-  DatepickerRow,
   ChartWrapper,
   colors,
 } from "./styles";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faInfoCircle
-} from '@fortawesome/free-solid-svg-icons';
-import ReactTooltip from 'react-tooltip';
 
 const SourceReport = (props) => {
   const INITIAL_STATE = {
@@ -186,18 +179,6 @@ const SourceReport = (props) => {
     <ReportWrapper>
       <ChartTitle>Top 5 Sources of Visits</ChartTitle>
       <Subtitle>{`Total sources - ${totalSources}`}</Subtitle>
-      {/* <DatepickerRow>
-        <CustomDatePicker
-          placeholder={"Start date"}
-          date={startDate}
-          handleDateChange={(date) => setStartDate(date)}
-        />
-        <CustomDatePicker
-          placeholder={"End date"}
-          date={endDate}
-          handleDateChange={(date) => setEndDate(date)}
-        />
-      </DatepickerRow> */}
       {reportData && (
         <ChartWrapper>
           <Bar data={data} width={100} height={250} options={options} />

@@ -1,26 +1,25 @@
+// Main file for Google API
+
 import React, { useState } from "react";
-import { addDays, format } from "date-fns";
-import { DatepickerRow } from "./styles";
+import { addDays } from "date-fns";
 import DayVisitsReport from "./dayVisitsReport";
 import CountriesReport from "./countriesReport";
-import PageviewsReport from "./pageviewReport";
 import SourceReport from "./sourceReport";
 import BrowsersReport from "./browsersReport";
 import DevicesReport from "./devicesReport";
+import RateReport from "./rate";
 import Gender from "./gender";
 import Age from "./age";
-import CustomDatePicker from "./datepicker";
-import { LastRow } from "./styles";
-import { Row, Col } from 'reactstrap';
-import styles from './Basic/index.css';
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+import TopContentReport from "./topContent";
+import ExitPageReport from "./exitPage";
+import { Row, Col, Card, CardBody } from 'reactstrap';
+import { UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const DashBoard = () => {
 
   const viewID = '190721502';
 
-  const [startDate, setStartDate] = useState(addDays(new Date(), -10));
+  const [startDate, setStartDate] = useState(addDays(new Date(), -6));
   const [endDate, setEndDate] = useState(new Date());
 
   return (
@@ -31,18 +30,24 @@ const DashBoard = () => {
           <h1 style={{ textAlign: "left", marginLeft: "15px" }}><b>FinKAB.com Insights</b></h1>
         </Col>
       </Row>
-      <DatepickerRow>
-        <CustomDatePicker
-          placeholder={"Start date"}
-          date={startDate}
-          handleDateChange={(date) => setStartDate(date)}
-        />
-        <CustomDatePicker
-          placeholder={"End date"}
-          date={endDate}
-          handleDateChange={(date) => setEndDate(date)}
-        />
-      </DatepickerRow>
+{/* button */}
+      <UncontrolledButtonDropdown className="mb-2 mr-2">
+        <DropdownToggle caret color="primary" className="mb-2 mr-2">
+          Days
+        </DropdownToggle>
+        <DropdownMenu>
+          <DropdownItem header>Choose the number of days</DropdownItem>
+          <DropdownItem onClick={() => { setStartDate(addDays(endDate, -6)) }}><b>7 Days</b></DropdownItem>
+          <DropdownItem onClick={() => { setStartDate(addDays(endDate, -27)) }}><b>28 Days</b></DropdownItem>
+          <DropdownItem onClick={() => { setStartDate(addDays(endDate, -89)) }}><b>90 Days</b></DropdownItem>
+        </DropdownMenu>
+      </UncontrolledButtonDropdown>
+      {console.log(startDate.toString().substring(4,15))}
+      <Card style={{ width: '40%', margin: '0 auto', borderRadius: '10px' }}><CardBody>
+        <b><h3>{startDate.toString().substring(4,15)} to {endDate.toString().substring(4,15)}</h3></b>
+      </CardBody></Card>
+      <br></br>
+{/* Community Demographic */}
       <div style={{ padding: "10px 0px 10px 30px" }}>
         <Row>
           <Col md="4">
@@ -50,6 +55,7 @@ const DashBoard = () => {
           </Col>
         </Row>
       </div>
+{/* age */}
       <div>
         <Row>
           <Col md="6">
@@ -60,6 +66,7 @@ const DashBoard = () => {
               </div>
             </div>
           </Col>
+{/* countries */}
           <Col md="6">
             <div className="card">
               <div className="card-body">
@@ -69,6 +76,7 @@ const DashBoard = () => {
             </div>
           </Col>
         </Row>
+{/* gender */}
         <Row>
           <Col md="6">
             <div className="card">
@@ -78,6 +86,7 @@ const DashBoard = () => {
               </div>
             </div>
           </Col>
+{/* browsers */}
           <Col md="6">
             <div className="card">
               <div className="card-body">
@@ -87,13 +96,15 @@ const DashBoard = () => {
             </div>
           </Col>
         </Row>
+{/* Website Engagement */}
         <div style={{ padding: "10px 0px 10px 30px" }}>
-        <Row>
-          <Col md="4">
-            <h3 style={{ textAlign: "left" }}>Website Engagement</h3>
-          </Col>
-        </Row>
-      </div>
+          <Row>
+            <Col md="4">
+              <h3 style={{ textAlign: "left" }}>Website Engagement</h3>
+            </Col>
+          </Row>
+        </div>
+{/* users per day */}
         <Row>
           <Col md="6">
             <div className="card">
@@ -109,6 +120,7 @@ const DashBoard = () => {
               </div>
             </div>
           </Col>
+{/* sessions per day */}
           <Col md="6">
             <div className="card">
               <div className="card-body">
@@ -123,6 +135,7 @@ const DashBoard = () => {
               </div></div>
           </Col>
         </Row>
+{/* sources of visit */}
         <Row>
           <Col md="6">
             <div className="card">
@@ -133,18 +146,119 @@ const DashBoard = () => {
             </div>
           </Col>
         </Row>
-        {/* <Row>
+{/* top content */}
+        <Row>
           <Col md="6">
             <div className="card">
               <div className="card-body">
-                <DevicesReport viewID={viewID} startDate={startDate}
+                <TopContentReport viewID={viewID} startDate={startDate}
                   endDate={endDate} />
               </div>
             </div>
           </Col>
-        </Row> */}
+{/* top exit pages */}
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <ExitPageReport viewID={viewID} startDate={startDate}
+                  endDate={endDate} />
+              </div>
+            </div>
+          </Col>
+        </Row>
+{/* average time spent*/}
+        <Row>
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <RateReport
+                  metric={"ga:avgTimeOnPage"}
+                  title={"Average Time Spent"}
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div>
+            </div>
+          </Col>
+{/* average pages per visit */}
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <RateReport
+                  metric={"ga:pageviewsPerSession"}
+                  title={"Average Page Per Visits"}
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div></div>
+          </Col>
+        </Row>
+{/* bounce rate */}
+        <Row>
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <RateReport
+                  metric={"ga:bounceRate"}
+                  title={"Bounce Rate"}
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div>
+            </div>
+          </Col>
+{/* devices by users */}
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <DevicesReport
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+{/* new visitors */}
+        <Row>
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <DayVisitsReport id="chart"
+                  metric={"ga:newUsers"}
+                  title={"New Visitor"}
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div>
+            </div>
+          </Col>
+{/* active users */}
+          <Col md="6">
+            <div className="card">
+              <div className="card-body">
+                <DayVisitsReport
+                  metric={"ga:1DayUsers"}
+                  title={"Active User"}
+                  viewID={viewID}
+                  startDate={startDate}
+                  endDate={endDate}
+                  description="TBC"
+                />
+              </div></div>
+          </Col>
+        </Row>
       </div>
-      {/* ) : ''} */}
     </div>)
 
 };

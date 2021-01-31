@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { addDays, format } from "date-fns";
-import CustomDatePicker from "./datepicker";
+import { format } from "date-fns";
 import { queryReport } from "./queryReport";
 import { formatDate, transformToDate } from "./utils";
 import {
   ChartTitle,
   ReportWrapper,
-  Subtitle,
-  DatepickerRow,
   ChartWrapper,
   colors,
 } from "./styles";
@@ -34,7 +31,7 @@ const SourceReport = (props) => {
         hoverBackgroundColor: 'rgba(146,202,242,0.4)',
         hoverBorderColor: 'rgba(38,150,228,1)',
         borderCapStyle: 'round',
-        data: [0, 20, 0, 0, 0, 0, 8, 0, 0, 0, 0]
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       }]
     }
   };
@@ -161,48 +158,6 @@ const SourceReport = (props) => {
     })
   };
 
-  const options = {
-    tooltips: {
-      displayColors: true,
-      callbacks: {
-        mode: "x",
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          stacked: true,
-          gridLines: {
-            display: false,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          stacked: true,
-          ticks: {
-            beginAtZero: true,
-          },
-          type: "linear",
-        },
-      ],
-    },
-    maintainAspectRatio: false,
-    legend: { position: "bottom" },
-    plugins: {
-      datalabels: {
-        font: {
-          size: 0,
-        },
-      },
-    },
-  };
-
-  const data = {
-    labels: reportData.labels,
-    datasets: reportData.datasets,
-  };
-
   useEffect(() => {
     const request = {
       viewID: props.viewID,
@@ -210,6 +165,10 @@ const SourceReport = (props) => {
       endDate: props.endDate,
       metrics: "ga:users",
       dimensions: ["ga:source", "ga:date"],
+      orderBy: {
+        fieldName: "ga:source",
+        order: "DESCENDING",
+      },
     };
     setTimeout(
       () =>
@@ -227,21 +186,8 @@ const SourceReport = (props) => {
         <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
       </div>
       <ChartTitle>Sources of Visits</ChartTitle>
-      {/* <DatepickerRow>
-        <CustomDatePicker
-          placeholder={"Start date"}
-          date={startDate}
-          handleDateChange={(date) => setStartDate(date)}
-        />
-        <CustomDatePicker
-          placeholder={"End date"}
-          date={endDate}
-          handleDateChange={(date) => setEndDate(date)}
-        />
-      </DatepickerRow> */}
       {reportData && (
         <ChartWrapper>
-          {/* <Bar data={data} width={100} height={250} options={options} /> */}
           <Bar
             data={reportData.sets}
             width={50}

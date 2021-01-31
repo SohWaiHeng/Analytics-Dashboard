@@ -1,5 +1,7 @@
+// import useful libraries
+
 import React, { Component, Fragment } from 'react';
-import { UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Container } from 'reactstrap';
+import { UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Bar, Pie } from 'react-chartjs-2';
 import styles from './index.css';
 import like from '../../assets/images/like.png';
@@ -8,14 +10,10 @@ import angry from '../../assets/images/angry.png';
 import haha from '../../assets/images/haha.png';
 import wow from '../../assets/images/wow.png';
 import sad from '../../assets/images/sad.png';
-import care from '../../assets/images/care.png';
 import ReactTooltip from 'react-tooltip';
-import styled from "styled-components";
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from "@material-ui/core/Button";
 import InfoIcon from '@material-ui/icons/Info';
-import IconButton from '@material-ui/core/IconButton';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
     Row, Col,
@@ -38,7 +36,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { black } from 'material-ui/styles/colors';
+
+// create variables used in dashboard
 
 const useStylesBootstrap = makeStyles((theme) => ({
     arrow: {
@@ -62,7 +61,11 @@ function LightTooltip(props) {
 }
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// store all the daily data for different metrics
 var maindata = [];
+
+// store the 7 days data for all metrics
 var total7Days = {
     'Likes Sources': {
         "Ads": 0,
@@ -90,6 +93,8 @@ var total7Days = {
         "page post": 0
     }
 };
+
+// store 28 days data for all metrics
 var total28Days = {
     'Likes Sources': {
         "Ads": 0,
@@ -117,6 +122,8 @@ var total28Days = {
         "page post": 0
     }
 };
+
+// store 90 days data for all metrics
 var total90Days = {
     'Likes Sources': {
         "Ads": 0,
@@ -144,6 +151,8 @@ var total90Days = {
         "page post": 0
     }
 };
+
+// store the data which uses the progress bar (in terms of percentage)
 var temp = {
     'Likes Sources': {
         "Ads": 0,
@@ -171,9 +180,10 @@ var temp = {
         "page post": 0
     }
 };
+
+// store countries related data
 var countryDataArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var countryDataNames = [];
-var totalCountryData = { '7': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], '28': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], '90': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
 var country = {
     labels: countryDataNames,
     datasets: [
@@ -210,6 +220,7 @@ var country = {
         }
     ]
 }
+
 var todaysDate, day7Date, day28Date, day90Date, totalLikes = 0;
 var previous7Days = { 'country': [] };
 var previous28Days = { 'country': [] };
@@ -221,14 +232,41 @@ let genderAge28 = { 'M': [0, 0, 0, 0, 0, 0, 0], 'F': [0, 0, 0, 0, 0, 0, 0], 'U':
 let genderAge90 = { 'M': [0, 0, 0, 0, 0, 0, 0], 'F': [0, 0, 0, 0, 0, 0, 0], 'U': [0, 0, 0, 0, 0, 0, 0] };
 var difference = { 'Page Engagement': { '7': 0, '28': 0, '90': 0 }, 'Page Impressions': { '7': 0, '28': 0, '90': 0 }, 'New Fans': { '7': 0, '28': 0, '90': 0 }, 'Page Consumptions': { '7': 0, '28': 0, '90': 0 }, 'Page View Total': { '7': 0, '28': 0, '90': 0 }, 'Page Engaged Users': { '7': 0, '28': 0, '90': 0 }, 'Daily Reach': { '7': 0, '28': 0, '90': 0 }, 'Post Impression': { '7': 0, '28': 0, '90': 0 }, 'Posts Reach': { '7': 0, '28': 0, '90': 0 }, 'Post Engaged Users': { '7': 0, '28': 0, '90': 0 }, 'Positive Feedback': { '7': 0, '28': 0, '90': 0 }, 'Number of Likes': { '7': 0, '28': 0, '90': 0 }, 'Number of Loves': { '7': 0, '28': 0, '90': 0 }, 'Number of Wow': { '7': 0, '28': 0, '90': 0 }, 'Number of Haha': { '7': 0, '28': 0, '90': 0 }, 'Number of Sorry': { '7': 0, '28': 0, '90': 0 }, 'Number of Anger': { '7': 0, '28': 0, '90': 0 } };
 var todaysValue = {};
+var onlineFollowersNum = [];
 const barColor = { 'Likes Sources': 'success', 'Page Impressions Frequency': 'info', 'Page View Sites': 'warning', 'Fans Impressions': 'danger' }
-const metricsArray = ['Page Engagement', 'Page Impressions', 'Page Consumptions', 'Page View Total', 'Page Engaged Users', 'Post Impression', 'Posts Reach', 'Post Engaged Users', 'New Fans', 'Positive Feedback'];
+const metricsArray = ['Page Engagement', 'Page Impressions', 'Page Consumptions', 'Page View Total', 'Page Engaged Users', 'New Fans', 'Positive Feedback', 'Post Impression', 'Posts Reach'];
 const reactionArray = ['Number of Likes', 'Number of Loves', 'Number of Wow', 'Number of Haha', 'Number of Sorry', 'Number of Anger'];
 const description = { 'WWW': 'World Wide Web', 'MOBILE': 'Mobile', 'OTHER': 'Others', 'link': 'Shared a post/story', 'like': 'Like a post/story', 'comment': 'Commented on a post/story', 'other': 'Others', 'fan': 'Fans', 'page post': 'Page posts' }
 const pageEngagementDescriptions = ["The number of times people have engaged with your posts through reactions, comments, shares and more.", "The number of times any content (posts, ads, stories) from your Page or about your Page entered a person's screen.", "The number of times people clicked on any of your content. [Lead Generation]", "The number of times a Page's profile has been viewed.", "The number of people who engaged with your Page. Engagement includes any click."]
-const postEngagementDescriptions = ["The number of times people have engaged with your posts through reactions, comments, shares and more.", "The number of people who clicked anywhere in your posts.", "The number of people who had any content from your Page or about your Page enter their screen through with social information attached. As a form of organic distribution, social information displays when a person's friend interacted with your Page, post or story. This includes when someone's friend likes or follows your Page, engages with a post, shares a photo of your Page and checks into your Page."]
-const growthDescriptions = ["The number of new people who have liked your Page.", "The number of times people took a positive action on your Page."]
+const postEngagementDescriptions = ["The number of new people who have liked your Page.", "The number of times people took a positive action on your Page.", "The number of times people have engaged with your posts through reactions, comments, shares and more.", "The number of people who clicked anywhere in your posts.", 'Total number of this profile\'s followers that were online during the specified period']
+const growthDescriptions = ["The number of new people who have liked your Page.", "The number of times people took a positive action on your Page.", 'Total number of this profile\'s followers that were online during the specified period']
 const sourcesDescriptions = ["This is a breakdown of the number of Page likes from the most common places where people can like your Page, by Page story type.", "The number of stories about your Page's stories.", "The number of times people took a positive action.", "The number of people logged in to Facebook who have viewed your Page profile, broken down by the type of device."]
+const compareOnline = {
+    0: 16,
+    1: 17,
+    2: 18,
+    3: 19,
+    4: 20,
+    5: 21,
+    6: 22,
+    7: 23,
+    8: 0,
+    9: 1,
+    10: 2,
+    11: 3,
+    12: 4,
+    13: 5,
+    14: 6,
+    15: 7,
+    16: 8,
+    17: 9,
+    18: 10,
+    19: 11,
+    20: 12,
+    21: 13,
+    22: 14,
+    23: 15,
+}
 var progressValues = {
     'Likes Sources': {
         "Ads": 0,
@@ -277,7 +315,7 @@ function formatNumber(num) {
 
 var access_token;
 
-var postImpression, postEngagedUsers, postsReach, pageImpressionsFrequencyDistribution, pageViewsBySite, fansByLikeSource, fansCountry, pageTotalLikers, pagePostEngagement, pageEngagedUsers, pageImpressions, pageNewLikers, genderAndAgeToFrequency, clicksOnPageContents, pageViews, postLikes, postLoves, postWow, postHaha, postSorry, postAnger, postReactions, dailyReach, talkedAbout, totalPageLikes;
+var postImpression, postEngagedUsers, postsReach, pageImpressionsFrequencyDistribution, pageViewsBySite, fansByLikeSource, fansCountry, pageTotalLikers, pagePostEngagement, pageEngagedUsers, pageImpressions, pageNewLikers, genderAndAgeToFrequency, clicksOnPageContents, pageViews, postLikes, postLoves, postWow, postHaha, postSorry, postAnger, postReactions, dailyReach, talkedAbout, onlineFollowers;
 
 const optionsCursorTrueWithMargin = {
     followCursor: true,
@@ -285,6 +323,7 @@ const optionsCursorTrueWithMargin = {
     shiftY: 0
 }
 
+// function to change the date format
 function changeDateFormat(date) {
     let month = {
         "01": " Jan ",
@@ -305,7 +344,7 @@ function changeDateFormat(date) {
 
 export default class BasicDashboard extends Component {
 
-    constructor() {
+    constructor(props) {
         super();
 
         this.state = {
@@ -428,6 +467,20 @@ export default class BasicDashboard extends Component {
                 'Fans Impressions': [],
                 'People Talking About Your Page': [0, 0, 0]
             },
+            onlineFollowers: {
+                labels: ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'],
+                datasets: [
+                    {
+                        backgroundColor: 'rgba(146,202,242,0.2)',
+                        borderColor: 'rgba(38,150,228,1)',
+                        borderWidth: 1,
+                        hoverBackgroundColor: 'rgba(146,202,242,0.4)',
+                        hoverBorderColor: 'rgba(38,150,228,1)',
+                        borderCapStyle: 'round',
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }
+                ]
+            },
             isHovering: false
         };
         this.toggle = this.toggle.bind(this);
@@ -499,6 +552,7 @@ export default class BasicDashboard extends Component {
         })
     }
 
+    // all the current functions are used to update the displayed data when different number of days are chosen
     current0(metric, object) {
         this.setState(prevState => {
             let obj = Object.assign({}, prevState.obj);
@@ -515,6 +569,7 @@ export default class BasicDashboard extends Component {
         })
     }
 
+    // update the latest data for related metrics
     current2(metric) {
         this.setState(prevState => {
             let todaysValue = Object.assign({}, prevState.todaysValue);
@@ -523,6 +578,7 @@ export default class BasicDashboard extends Component {
         })
     }
 
+    // update the percentage changed displayed for related metrics
     current3(metric) {
         this.setState(prevState => {
             let difference = Object.assign({}, prevState.difference);
@@ -532,6 +588,7 @@ export default class BasicDashboard extends Component {
         })
     }
 
+    // update demongraphic data
     current4(obj) {
         this.setState(prevState => {
             let demographic = Object.assign({}, prevState.demographic);
@@ -545,6 +602,7 @@ export default class BasicDashboard extends Component {
         })
     };
 
+    // update country data
     current5(array) {
         this.setState(prevState => {
             let thecountry = Object.assign({}, prevState.thecountry);
@@ -594,6 +652,7 @@ export default class BasicDashboard extends Component {
         progressValuesNames[name] = progressValuesNames[name].slice(0, arrLength);
     }
 
+    // functions inside componentDidMount will be run since the beginning
     componentDidMount() {
 
         var script = document.createElement('script');
@@ -635,7 +694,7 @@ export default class BasicDashboard extends Component {
 
         function getFBData() {
 
-            let accesstoken = 'EAAPWNENHrcUBAABzZCui4hFzNM9ZBdZBYh9EeTPMoNxOMDLEdMx5qRfM3n194zv68NXhplEftvv5EvhRRZAz18DWp2w435ykfNWgCjw1HQZBiof3O9IHZCeICXdJ2v6SI5EV5IP9NTWJ1WBF2TfdlmrpwrJ786eqOw2bko6QZAZC53qMtHH7qs8x86ZC568idviae6AcXG5N0IAZDZD'
+            let accesstoken = 'EAAPWNENHrcUBAGhWddJQiTk4p2pLD4VCvXS5TFLodT0FldefNR7Bmy9qSmWLJgOzFJYl6RsOCMztr8Dc4LZCDXC3swEYKYvyWZAnhJeUe7XBj4ycYMm7cNaP4yZBHXW7BXb45YgnzcDX41Q3EPldDIyf0awJlI4cEXnBWD5LZBvdWK77jbKg0xLbZB9vSangZD'
 
             const now = Math.round(Date.now() / 1000);
             const before = Math.round(now - 8000000);
@@ -648,7 +707,8 @@ export default class BasicDashboard extends Component {
             }
 
             function startThis(callback) {
-                return getInsights("page_posts_impressions_unique,post_engaged_users,page_posts_impressions_viral_unique,page_post_engagements,page_impressions,page_fans,page_fan_adds_unique,page_impressions_by_age_gender_unique,page_consumptions,page_fans_by_like_source,page_impressions_frequency_distribution,page_views_total,page_views_by_site_logged_in_unique,page_fans_country,page_actions_post_reactions_like_total,page_actions_post_reactions_love_total,page_actions_post_reactions_wow_total,page_actions_post_reactions_haha_total,page_actions_post_reactions_sorry_total,page_actions_post_reactions_anger_total,page_positive_feedback_by_type,page_impressions_viral_unique,page_fans_gender_age,page_content_activity_by_action_type,page_engaged_users", function (res) {
+                // all the metrics must be added here
+                return getInsights("page_posts_impressions_unique,post_engaged_users,page_posts_impressions_viral_unique,page_post_engagements,page_impressions,page_fans,page_fans_online,page_fan_adds_unique,page_impressions_by_age_gender_unique,page_consumptions,page_fans_by_like_source,page_impressions_frequency_distribution,page_views_total,page_views_by_site_logged_in_unique,page_fans_country,page_actions_post_reactions_like_total,page_actions_post_reactions_love_total,page_actions_post_reactions_wow_total,page_actions_post_reactions_haha_total,page_actions_post_reactions_sorry_total,page_actions_post_reactions_anger_total,page_positive_feedback_by_type,page_impressions_viral_unique,page_fans_gender_age,page_content_activity_by_action_type,page_engaged_users", function (res) {
                     createClass(res, function (resp) {
                         getValue(resp);
                     })
@@ -675,7 +735,16 @@ export default class BasicDashboard extends Component {
                         this.numberOfDays = numberOfDays;
                     }
 
+                    // function to get daily values from FB api
+                    // function which store 7,28,90 days of value for related metrics
                     updateSimpleData(data, name) {
+                        todaysDate = changeDateFormat(data.values[data.values.length - 1].end_time.substring(0, 10))
+                        day7Date = changeDateFormat(data.values[data.values.length - 8].end_time.substring(0, 10))
+                        day28Date = changeDateFormat(data.values[data.values.length - 29].end_time.substring(0, 10))
+                        if (data.values.length >= 91)
+                            day90Date = changeDateFormat(data.values[data.values.length - 91].end_time.substring(0, 10))
+                        else
+                            day90Date = changeDateFormat(data.values[0].end_time.substring(0, 10))
                         var count = 89, sum = 0;
                         allData.forEach((obj) => {
                             if (data.period == 'day') {
@@ -698,6 +767,8 @@ export default class BasicDashboard extends Component {
                         });
                     }
 
+                    // function to store metrics which are more advanced
+                    // function to get progress bar value and percentage
                     updateAdvancedData(data, name) {
                         var count = 89, sum = {}, totalPos = 0;
                         total7Days[name] = {};
@@ -723,10 +794,9 @@ export default class BasicDashboard extends Component {
                                 }
                             });
                             if (count == 83) {
-                                console.log(sum)
                                 Object.entries(sum).forEach(([key, value]) => {
                                     total7Days[name][key.toString()] = value || 0;
-                                    if (name == 'Likes Sources') { console.log('hi'); total7Days['Positive Feedback'] = totalPos || 0 };
+                                    if (name == 'Likes Sources') { total7Days['Positive Feedback'] = totalPos || 0 };
                                     progressValues[name][key.toString()] = value || 0;
                                     if (name == 'People Talking About Your Page') {
                                         talkedAboutSum['7'] += value || 0;
@@ -755,13 +825,11 @@ export default class BasicDashboard extends Component {
                             }
                             count--;
                         });
-                        console.log(progressValues)
                         Object.entries(progressValues).forEach(([key, value]) => {
                             Object.entries(progressValues[key]).forEach(([key2, value2]) => {
                                 temp[key][key2] = 0 || ((progressValues[key][key2] / Math.max(...Object.values(progressValues[key]))) * 100);
                             })
-                        })
-                        console.log(temp)
+                        });
                         const arrLength = progressValuesData[name].length;
                         Object.entries(temp[name]).forEach(([key2, value2]) => {
                             var count = 0;
@@ -778,21 +846,10 @@ export default class BasicDashboard extends Component {
                         })
                         progressValuesData[name] = progressValuesData[name].slice(0, arrLength);
                         progressValuesNames[name] = progressValuesNames[name].slice(0, arrLength);
-                        console.log(total28Days)
-                        console.log(progressValuesData)
                     }
 
+                    // function to get and organize countries data
                     changeCountryData(data) {
-                        console.log(data)
-                        console.log(data.values[data.values.length - 1].end_time.substring(0, 10))
-                        todaysDate = changeDateFormat(data.values[data.values.length - 1].end_time.substring(0, 10))
-                        console.log(todaysDate)
-                        day7Date = changeDateFormat(data.values[data.values.length - 8].end_time.substring(0, 10))
-                        day28Date = changeDateFormat(data.values[data.values.length - 29].end_time.substring(0, 10))
-                        if (data.values.length >= 91)
-                            day90Date = changeDateFormat(data.values[data.values.length - 91].end_time.substring(0, 10))
-                        else
-                            day90Date = changeDateFormat(data.values[0].end_time.substring(0, 10))
                         Object.entries(data.values[data.values.length - 1].value).forEach(([key, value]) => {
                             key in countryArr ? countryNum[countryArr[key]] = value : countryNum['Others'] += value;
                         })
@@ -813,6 +870,7 @@ export default class BasicDashboard extends Component {
                         countryDataNames = countryDataNames.slice(0, 12);
                     }
 
+                    // function to get metric which provides lifetime value only
                     saveLivetimeValue(data, name) {
                         todaysDate = changeDateFormat(data.values[data.values.length - 1].end_time.substring(0, 10))
                         day7Date = changeDateFormat(data.values[data.values.length - 8].end_time.substring(0, 10))
@@ -844,6 +902,20 @@ export default class BasicDashboard extends Component {
                         });
                     }
 
+                    // function to get data for number of online followers for different time period
+                    saveOnlineFollowersValue(data, name) {
+                        var count = data.values.length - 1;
+                        for (let i = count; i >= 0; i--) {
+                            if (data.values[i].value[0] != null && data.values[i].value[0] != 0) {
+                                Object.entries(data.values[i].value).forEach(((key, value) => {
+                                    onlineFollowersNum[compareOnline[value]] = data.values[i].value[value]
+                                }));
+                                break;
+                            }
+                        }
+                    }
+
+                    // below functions are to obtain and organize data for age and gender
                     getTotal(dict, name, key, sum, maleNum, femaleNum, unknownNum) {
                         dict[name]['M'][key] = maleNum;
                         dict[name]['F'][key] = femaleNum;
@@ -917,6 +989,7 @@ export default class BasicDashboard extends Component {
                         });
                     }
 
+
                     displayData(variable) {
                         document.write('<h2>' + this.name + '</h2>');
                         document.write('<h3>' + this.numberOfDays + ' days : ' + variable + '</h3>');
@@ -930,12 +1003,14 @@ export default class BasicDashboard extends Component {
                     }
                 }
 
+                // allData will be stored in mainData later
                 var allData = [];
                 for (let i = 0; i < 90; i++) {
                     const name = i + 'day';
                     allData.push({ 'name': name });
                 }
 
+                // create new classes for each metric used
                 pageImpressionsFrequencyDistribution = new Metrics('page_impressions_frequency_distribution', 7)
                 pageViewsBySite = new Metrics('page_views_by_site_logged_in_unique', 7);
                 fansByLikeSource = new Metrics('page_fans_by_like_source', 7);
@@ -960,6 +1035,7 @@ export default class BasicDashboard extends Component {
                 postImpression = new Metrics('page_posts_impressions_unique', 7);
                 postEngagedUsers = new Metrics('post_engaged_users', 7);
                 postsReach = new Metrics('page_posts_impressions_viral_unique', 7);
+                onlineFollowers = new Metrics('page_fans_online', 7);
 
                 for (let i = 0; i < res.data.length; i++) {
 
@@ -1000,7 +1076,6 @@ export default class BasicDashboard extends Component {
                             break;
 
                         case 'page_fans_by_like_source':
-                            console.log(res.data[i])
                             fansByLikeSource.updateAdvancedData(res.data[i], 'Likes Sources');
                             break;
 
@@ -1063,6 +1138,9 @@ export default class BasicDashboard extends Component {
                         case 'post_engaged_users':
                             postEngagedUsers.saveLivetimeValue(res.data[i], 'Post Engaged Users');
                             break;
+
+                        case 'page_fans_online':
+                            onlineFollowers.saveOnlineFollowersValue(res.data[i], 'Online Followers');
                     }
                 }
                 callback(allData);
@@ -1074,8 +1152,24 @@ export default class BasicDashboard extends Component {
 
         }
 
+        // store data in their respective objects after all the data is being extracted and kept in an organized way
         wait(6 * 1000).then(() => {
             var metric;
+            var newOnlineFollowers = {
+                labels: ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'],
+                datasets: [
+                    {
+                        label: 'Number of followers',
+                        backgroundColor: 'rgba(146,202,242,0.2)',
+                        borderColor: 'rgba(38,150,228,1)',
+                        borderWidth: 1,
+                        hoverBackgroundColor: 'rgba(146,202,242,0.4)',
+                        hoverBorderColor: 'rgba(38,150,228,1)',
+                        borderCapStyle: 'round',
+                        data: onlineFollowersNum
+                    }
+                ]
+            }
             for (metric of metricsArray) {
                 todaysValue[metric] = parseFloat(maindata[Object.keys(maindata)[0]][metric])
                 difference[metric]['7'] = ((total7Days[metric] - previous7Days[metric]) / previous7Days[metric]) * 100 || 0
@@ -1086,23 +1180,18 @@ export default class BasicDashboard extends Component {
                 difference[metric]['7'] = ((total7Days[metric] - previous7Days[metric]) / previous7Days[metric]) * 100 || 0
                 difference[metric]['28'] = ((total28Days[metric] - previous28Days[metric]) / previous28Days[metric]) * 100 || 0
             }
-            this.setState({ data: maindata, todaysValue: todaysValue, difference: difference, progressValues: temp, thecountry: country, progressValuesData: progressValuesData, progressValuesNames: progressValuesNames });
-            console.log(this.state.data)
-            console.log(total7Days)
-            console.log(total90Days)
+            this.setState({ data: maindata, todaysValue: todaysValue, difference: difference, progressValues: temp, thecountry: country, progressValuesData: progressValuesData, progressValuesNames: progressValuesNames, onlineFollowers: newOnlineFollowers });
+
         })
     }
 
-    logout = () => {
-        window.FB.logout(function (response) {
-            window.location = "/";
-        });
-    }
 
+    // Dashboard for Facebook data
     render() {
         return (
             <>
                 <Fragment>
+{/* Button */}
                     <UncontrolledButtonDropdown className="mb-2 mr-2">
                         <DropdownToggle caret color="primary" className="mb-2 mr-2">
                             {this.state.currentDifference} Days
@@ -1114,6 +1203,7 @@ export default class BasicDashboard extends Component {
                             <DropdownItem onClick={() => { this.changeCurrentDifference('90'); this.updateDataDisplayed('90'); }}><b>90 Days</b></DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
+{/* Dates which the data are getting displayed */}
                     <Card style={{ width: '40%', margin: '0 auto', borderRadius: '10px' }}><CardBody>
                         <b>{this.state.currentDifference == '7' ? <h3>{day7Date} to {todaysDate}</h3> : this.state.currentDifference == '28' ? <h3> {day28Date} to {todaysDate}</h3> : <h3>{day90Date} to {todaysDate}</h3>}</b>
                     </CardBody></Card>
@@ -1122,6 +1212,7 @@ export default class BasicDashboard extends Component {
                         <br></br>
                         <h1 style={{ textAlign: "left", marginLeft: "15px" }}><b>Facebook Insights</b></h1>
                     </Col>
+{/* Facebook Community Overview */}
                     <div style={{ padding: "10px 0px 10px 30px", borderRadius: "20%" }}>
                         <Row>
                             <Col md="4">
@@ -1143,6 +1234,7 @@ export default class BasicDashboard extends Component {
                             </Col>
                         </Row>
                     </div>
+{/* Community Demographic */}
                     <div style={{ padding: "10px 0px 10px 30px" }}>
                         <Row>
                             <Col md="4">
@@ -1203,6 +1295,7 @@ export default class BasicDashboard extends Component {
                             <Col lg="1"></Col>
                         </Row>
                     </div>
+{/* Page Engagement */}
                     <div style={{ padding: "10px 0px 10px 30px" }}>
                         <Row>
                             <Col md="4">
@@ -1220,14 +1313,8 @@ export default class BasicDashboard extends Component {
                                                 <div className="card mb-2 widget-chart" style={{ borderRadius: '10px' }}>
                                                     <div className="widget-chart-content">
                                                         <div style={{ float: 'right' }}>
-                                                            {/* <Hoverable>
-                                                                {(hovered) => {if (hovered) return <Box bgcolor="warning.main" color="warning.contrastText" p={2}>{pageEngagementDescriptions[index]}</Box> }}
-                                                        </Hoverable> */}
-                                                            {/* <a data-for='enrich' data-tip={pageEngagementDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
-                                                            <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} /> */}
-                                                            <LightTooltip title={pageEngagementDescriptions[index]} aria-label={pageEngagementDescriptions[index]} placement="top" arrow>
-                                                                <InfoIcon />
-                                                            </LightTooltip>
+                                                            <a data-for='enrich' data-tip={pageEngagementDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
+                                                            <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
                                                         </div>
                                                         <div className="widget-subheading" >
                                                             <center><h2><b>{metricsArray[index]}</b></h2></center>
@@ -1265,15 +1352,16 @@ export default class BasicDashboard extends Component {
                             )
                         })}
                     </Row>
+{/* Growth and Post Engagement */}
                     <div style={{ padding: "10px 0px 10px 30px" }}>
                         <Row>
                             <Col md="4">
-                                <h3 style={{ textAlign: "left" }}>Post Engagement</h3>
+                                <h3 style={{ textAlign: "left" }}>Growth and Post Engagement</h3>
                             </Col>
                         </Row>
                     </div>
                     <Row >
-                        {metricsArray.slice(5, 8).map((value, index) => {
+                        {metricsArray.slice(5, 9).map((value, index) => {
                             return (
                                 <Col lg="4" key={index}>
                                     <span className="rounded">
@@ -1282,9 +1370,6 @@ export default class BasicDashboard extends Component {
                                                 <div className="card mb-2 widget-chart" style={{ borderRadius: '10px' }}>
                                                     <div className="widget-chart-content">
                                                         <div style={{ float: 'right' }}>
-                                                            {/* <Hoverable>
-                                                                {(hovered) => {if (hovered) return <Box bgcolor="warning.main" color="warning.contrastText" p={2}>{pageEngagementDescriptions[index]}</Box> }}
-                                                        </Hoverable> */}
                                                             <a data-for='enrich' data-tip={postEngagementDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
                                                             <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
                                                         </div>
@@ -1323,63 +1408,47 @@ export default class BasicDashboard extends Component {
                                 </Col>
                             )
                         })}
+                        <Col lg="8">
+                            <span className="rounded">
+                                <div className="card" className={styles.card} style={{ borderRadius: '10px' }}>
+                                    <div className="card-body" style={{ padding: "10px 0px 10px 30px" }}>
+                                        <div className="card mb-2 widget-chart" style={{ borderRadius: '10px' }}>
+                                            <div className="widget-chart-content">
+                                                <div style={{ float: 'right' }}>
+                                                    <a data-for='enrich' data-tip={growthDescriptions[2]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
+                                                    <ReactTooltip id='enrich' border={'true'} textColor={'black'} backgroundColor={'white'} borderColor={'black'} getContent={(dataTip) => dataTip} />
+                                                </div>
+                                                <h2><b>Online Followers</b></h2>
+                                                <div>
+                                                    <Bar
+                                                        data={this.state.onlineFollowers}
+                                                        width={50}
+                                                        height={25}
+                                                        options={{
+                                                            barValueSpacing: 20,
+                                                            scales: {
+                                                                yAxes: [{
+                                                                    ticks: {
+                                                                        beginAtZero: 0,
+                                                                    }
+                                                                }]
+                                                            },
+                                                            plugins: {
+                                                                datalabels: {
+                                                                    display: false
+                                                                }
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                        </Col>
                     </Row>
-                    <div style={{ padding: "10px 0px 10px 30px" }}>
-                        <Row>
-                            <Col md="4">
-                                <h3 style={{ textAlign: "left" }}>Growth</h3>
-                            </Col>
-                        </Row>
-                    </div>
-                    <Row >
-                        {metricsArray.slice(8, 10).map((value, index) => {
-                            return (
-                                <Col lg="4" key={index}>
-                                    <span className="rounded">
-                                        <div className="card" className={styles.card} style={{ borderRadius: '10px' }}>
-                                            <div className="card-body" style={{ padding: "10px 0px 10px 30px" }}>
-                                                <div className="card mb-2 widget-chart" style={{ borderRadius: '10px' }}>
-                                                    <div className="widget-chart-content">
-                                                        <div style={{ float: 'right' }}>
-                                                            <a data-for='enrich' data-tip={growthDescriptions[index]}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon></a>
-                                                            <ReactTooltip id='enrich' getContent={(dataTip) => dataTip} />
-                                                        </div>
-                                                        <div className="widget-subheading" >
-                                                            <center><h2><b>{metricsArray[index + 8]}</b></h2></center>
-                                                        </div>
-                                                        <div className="widget-numbers">
-                                                            <h3><b>{this.state.currentDifference == '7' ? formatNumber(total7Days[value]) : (this.state.currentDifference == '28' ? formatNumber(total28Days[value]) : this.state.currentDifference == '90' ? formatNumber(total90Days[value]) : '')}</b></h3>
-                                                        </div>
-                                                        {this.state.currentDifference == '90' ? '' :
-                                                            <div>
-                                                                <div className={this.state.difference[value][this.state.currentDifference] > 0 ? "widget-description text-success" : "widget-description text-danger"}>
-                                                                    <FontAwesomeIcon icon={this.state.difference[value][this.state.currentDifference] > 0 ? faAngleUp : faAngleDown} />
-                                                                    <span className="pl-1">{(this.state.difference[value][this.state.currentDifference]).toFixed(2)}%</span>
-                                                                </div>
-                                                                <div>( from prev. period [{this.state.currentDifference == '7' ? formatNumber(previous7Days[value]) : formatNumber(previous28Days[value])}] )</div>
-                                                            </div>
-                                                        }
-                                                        <div style={{ padding: "10px 0px 10px 0px" }}>
-                                                            <ResponsiveContainer height={160} className="container" padding="10px 10px 10px 0px">
-                                                                <AreaChart data={maindata.slice(0, parseFloat(this.state.currentDifference))} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} className={styles.card}>
-                                                                    <defs>
-                                                                        <linearGradient id="colorPv2" x1="0" y1="0" x2="0" y2="1">
-                                                                            <stop offset="10%" stopColor={lineChartColour} stopOpacity={0.7} />
-                                                                            <stop offset="90%" stopColor={lineChartColour} stopOpacity={0} />
-                                                                        </linearGradient>
-                                                                    </defs>
-                                                                    <TooltipChart />
-                                                                    {/* <div style={{padding: "10px 10px 10px 0px"}}> */}
-                                                                    <Area type='monotoneX' dataKey={value} stroke={lineChartColour} strokeWidth={2} fillOpacity={1}
-                                                                        fill="url(#colorPv2)" style={{ padding: "10px 50px 10px 0px" }} />
-                                                                    {/* </div> */}
-                                                                </AreaChart>
-                                                            </ResponsiveContainer>
-                                                        </div></div></div></div></div></span>
-                                </Col>
-                            )
-                        })}
-                    </Row>
+{/* Sentimental Analysis */}
                     <div style={{ padding: "10px 0px 10px 30px" }}>
                         <Row>
                             <Col md="4">
@@ -1438,7 +1507,9 @@ export default class BasicDashboard extends Component {
                                     <h3 style={{ backgroundColor: '#ffcccb' }}>{this.state.totalWhatDays['Fans Impressions']['link']}</h3>
                                 </Col>
                             </Row>
-                        </Card></div>
+                        </Card>
+                    </div>
+{/* Sources */}
                     <div style={{ padding: "10px 0px 10px 30px" }}>
                         <Row>
                             <Col md="4">
@@ -1460,14 +1531,6 @@ export default class BasicDashboard extends Component {
                                                     </div>
                                                     <h3><b>{key}</b></h3>
                                                     <br></br>
-                                                    {/* {Object.keys(this.state.progressValuesData[key]).map((key2) => {
-                                                        return (
-                                                            <div>
-                                                                <h5>{key2 in description ? description[key2] : key2}</h5>
-                                                                <Progress className="mb-3" animated color={barColor[key]} value={this.state.progressValues[key][key2]}>{this.state.totalWhatDays[key][key2]}</Progress>
-                                                            </div>
-                                                        )
-                                                    })} */}
                                                     {this.state.progressValuesData[key].map((key2, index) => {
                                                         return (
                                                             <>

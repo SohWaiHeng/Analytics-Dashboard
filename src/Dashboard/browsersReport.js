@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addDays } from "date-fns";
 import { Pie } from "react-chartjs-2";
-import CustomDatePicker from "./datepicker";
 import { queryReport } from "./queryReport";
 import { ChartTitle, Subtitle, PieChartWrapper, colors } from "./styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -86,16 +84,6 @@ const BrowsersReport = (props) => {
       </div>
       <ChartTitle>Browsers by Users</ChartTitle>
       <Subtitle>{`Total Users - ${totalUsers}`}</Subtitle>
-      {/* <CustomDatePicker
-        placeholder={"Start date"}
-        date={startDate}
-        handleDateChange={(date) => setStartDate(date)}
-      />
-      <CustomDatePicker
-        placeholder={"End date"}
-        date={endDate}
-        handleDateChange={(date) => setEndDate(date)}
-      /> */}
       {reportData && (
         <PieChartWrapper>
           <Pie data={data} options={options} width={300} height={300} />

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addDays } from "date-fns";
 import { Doughnut } from "react-chartjs-2";
-import CustomDatePicker from "./datepicker";
 import { queryReport } from "./queryReport";
 import { ChartTitle, Subtitle, PieChartWrapper, colors } from "./styles";
 
@@ -74,16 +72,6 @@ const DevicesReport = (props) => {
     <div>
       <ChartTitle>Devices by Users</ChartTitle>
       <Subtitle>{`Total Users - ${totalUsers}`}</Subtitle>
-      {/* <CustomDatePicker
-        placeholder={"Start date"}
-        date={startDate}
-        handleDateChange={(date) => setStartDate(date)}
-      />
-      <CustomDatePicker
-        placeholder={"End date"}
-        date={endDate}
-        handleDateChange={(date) => setEndDate(date)}
-      /> */}
       {reportData && (
         <PieChartWrapper>
           <Doughnut data={data} options={options} width={300} height={300} />

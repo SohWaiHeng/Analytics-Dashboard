@@ -42,27 +42,7 @@ function App() {
 
   wait(3 * 1000).then(() => { iscalled = true });
 
-  // const fbSignIn = () => {
-  //   setIsFacebookSignedIn(true);
-  //   ReactDOM.render(
-  //   <div>
-  //     <BasicDashboard />
-  //     <script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossOrigin="anonymous"></link></script>
-  //   </div>, document.getElementById('fb'))
-  // }
-
-  // const googleSignIn = () => {
-  //   isGoogleSignedIn = true;
-  //   setIsSignedIn(true);
-  //   ReactDOM.render(
-  //     <div>
-  //       <DashBoard />
-  //       <script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossOrigin="anonymous"></link></script>
-  //     </div>, document.getElementById('google'))
-  // }
-
   return (
-    // <React.StrictMode>
     <div className="App" style={{ padding: "10px 10px 10px 30px" }}>
       <br></br>
       <div>
@@ -76,9 +56,7 @@ function App() {
       </div>
       <div id='fb'></div>
       <div id='google'></div>
-      {/* <>{!isSignedIn ? '' : <DashBoard />}</> */}
     </div>
-    // </React.StrictMode>
   );
 }
 

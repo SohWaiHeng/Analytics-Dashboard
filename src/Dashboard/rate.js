@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import ReactTooltip from 'react-tooltip';
 
-const DayVisitsReport = (props) => {
+const RateReport = (props) => {
   const INITIAL_STATE = {
     labels: [],
     values: [],
@@ -25,9 +25,7 @@ const DayVisitsReport = (props) => {
   const displayResults = (response) => {
     const queryResult = response.result.reports[0].data.rows;
     const total = response.result.reports[0].data.totals[0].values[0];
-    console.log(response.result.reports[0].data)
-    console.log(total)
-    setAverage(parseInt(total / response.result.reports[0].data.rowCount));
+    setAverage(parseInt(total));
     let labels = [];
     let values = [];
     queryResult.forEach((row) => {
@@ -142,4 +140,4 @@ const DayVisitsReport = (props) => {
   );
 };
 
-export default DayVisitsReport;
+export default RateReport;

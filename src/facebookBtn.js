@@ -45,7 +45,6 @@ class FacebookBtn extends Component {
         this.status(this.getStatus.bind(this))
     };
     loginFacebook() {
-        console.log("hello");
         this.login(this.getStatus.bind(this));
     }
     logoutFacebook() {
